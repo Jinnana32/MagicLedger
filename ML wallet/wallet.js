@@ -93,20 +93,18 @@ $(document).ready(function() {
 			"Extracted blockchain address: " + sessionStorage['address']
 		);
     }
-	
+    
 	async function displayBalance() {
         try {
             let address = $('#textBoxAccountAddress').val();
             let nodeUrl = $('#currentNodeUrl').val();
             let [balances, transactions] = await Promise.all([
-                $.get(`${nodeUrl}/address/${address}/balance`),
-                $.get(`${nodeUrl}/address/${address}/transactions`)
+                $.get(`${nodeUrl}/balance/address/${address}`),
+                $.get(`${nodeUrl}/transaction/address/${address}`)
             ]);
 
             $('#textareaAccountBalanceResult').text(
-                "Safe balance: " + balances.safeBalance + "\n" +
-                "Confirmed balance: " + balances.confirmedBalance + "\n" +
-                "Pending balance: " + balances.pendingBalance + "\n" +
+                "Safe balance: " + balances.balance + "\n" +
                 "\n" +
                 "Transactions: " + JSON.stringify(transactions)
             );
@@ -123,7 +121,7 @@ $(document).ready(function() {
         let transaction = {
             from: sessionStorage['address'],
             to: $('#recipientAddress').val(),
-            value: parseInt($('#transferValue').val()),
+            amount: parseInt($('#transferValue').val()),
             fee: parseInt($('#miningFee').val()),
             dateCreated: new Date().toISOString(),
             data: $('#tranData').val(),
